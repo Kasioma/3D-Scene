@@ -1,0 +1,10 @@
+{
+    "cSpell.words": [
+        "GLEW",
+        "Lsizeiptr"
+    ],
+    "files.associations": {
+        "*.ejs": "html",
+        "*.frag": "cpp"
+    }
+}
