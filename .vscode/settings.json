@@ -1,7 +1,8 @@
 {
     "cSpell.words": [
         "GLEW",
-        "Lsizeiptr"
+        "Lsizeiptr",
+        "Mipmap"
     ],
     "files.associations": {
         "*.ejs": "html",
