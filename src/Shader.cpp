@@ -2,6 +2,10 @@
 
 std::string getFileContents(const char* filename) {
     std::ifstream in(filename, std::ios::binary);
+    if (!in) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return "";
+    }
     if (in) {
         std::string contents;
         in.seekg(0, std::ios::end);
