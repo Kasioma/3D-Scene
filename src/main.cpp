@@ -1,38 +1,68 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <stb/stb_image.h>
+#include "../headers/Mesh.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <iostream>
+std::string relative        = "C:/Users/maria/OneDrive/Desktop/uni/graphics/scene/textures/";
+std::string relativeShaders = "C:/Users/maria/OneDrive/Desktop/uni/graphics/scene/shaders/";
+const unsigned int width    = 800;
+const unsigned int height   = 800;
 
-#include "../headers/EBO.h"
-#include "../headers/Shader.h"
-#include "../headers/Texture.h"
-#include "../headers/VAO.h"
-#include "../headers/VBO.h"
+Vertex vertices[] = {
+    Vertex{ glm::vec3(-0.5f, 0.0f, 0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(-1.0f, 0.0f) },   // Bottom side
+    Vertex{ glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(0.0f, 5.0f, 0.0f), glm::vec2(-1.0f, 0.0f) },  // Bottom side
+    Vertex{ glm::vec3(0.5f, 0.0f, -0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(5.0f, 5.0f, 0.0f), glm::vec2(-1.0f, 0.0f) },   // Bottom side
+    Vertex{ glm::vec3(0.5f, 0.0f, 0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(5.0f, 0.0f, 0.0f), glm::vec2(-1.0f, 0.0f) },    // Bottom side
 
-std::string relative      = "C:/Users/maria/OneDrive/Desktop/uni/graphics/scene/textures/";
-const unsigned int width  = 800;
-const unsigned int height = 800;
+    Vertex{ glm::vec3(-0.5f, 0.0f, 0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(0.0f, 0.0f, -0.8f), glm::vec2(0.5f, 0.0f) },   // Left Side
+    Vertex{ glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(5.0f, 0.0f, -0.8f), glm::vec2(0.5f, 0.0f) },  // Left Side
+    Vertex{ glm::vec3(0.0f, 0.8f, 0.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec3(2.5f, 5.0f, -0.8f), glm::vec2(0.5f, 0.0f) },    // Left Side
 
-GLfloat vertices[] = {
-    -0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f,
-    -0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f,
-    0.5f, 0.0f, -0.5f, 0.83f, 0.70f, 0.44f, 0.0f, 0.0f,
-    0.5f, 0.0f, 0.5f, 0.83f, 0.70f, 0.44f, 5.0f, 0.0f,
-    0.0f, 0.8f, 0.0f, 0.92f, 0.86f, 0.76f, 2.5f, 5.0f
+    Vertex{ glm::vec3(-0.5f, 0.0f, -0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(5.0f, 0.0f, 0.0f), glm::vec2(0.5f, -0.8f) },  // Non-facing side
+    Vertex{ glm::vec3(0.5f, 0.0f, -0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.5f, -0.8f) },   // Non-facing side
+    Vertex{ glm::vec3(0.0f, 0.8f, 0.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec3(2.5f, 5.0f, 0.0f), glm::vec2(0.5f, -0.8f) },    // Non-facing side
+
+    Vertex{ glm::vec3(0.5f, 0.0f, -0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(0.0f, 0.0f, 0.8f), glm::vec2(0.5f, 0.0f) },  // Right side
+    Vertex{ glm::vec3(0.5f, 0.0f, 0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(5.0f, 0.0f, 0.8f), glm::vec2(0.5f, 0.0f) },   // Right side
+    Vertex{ glm::vec3(0.0f, 0.8f, 0.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec3(2.5f, 5.0f, 0.8f), glm::vec2(0.5f, 0.0f) },   // Right side
+
+    Vertex{ glm::vec3(0.5f, 0.0f, 0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(5.0f, 0.0f, 0.0f), glm::vec2(0.5f, 0.8f) },   // Facing side
+    Vertex{ glm::vec3(-0.5f, 0.0f, 0.5f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.5f, 0.8f) },  // Facing side
+    Vertex{ glm::vec3(0.0f, 0.8f, 0.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec3(2.5f, 5.0f, 0.0f), glm::vec2(0.5f, 0.8f) }    // Facing side
 };
 
 GLuint indices[] = {
+    0, 1, 2,     // Bottom side
+    0, 2, 3,     // Bottom side
+    4, 6, 5,     // Left side
+    7, 9, 8,     // Non-facing side
+    10, 12, 11,  // Right side
+    13, 15, 14   // Facing side
+};
+
+Vertex lightVertices[] = {
+    Vertex{ glm::vec3(-0.1f, -0.1f, 0.1f) },
+    Vertex{ glm::vec3(-0.1f, -0.1f, -0.1f) },
+    Vertex{ glm::vec3(0.1f, -0.1f, -0.1f) },
+    Vertex{ glm::vec3(0.1f, -0.1f, 0.1f) },
+    Vertex{ glm::vec3(-0.1f, 0.1f, 0.1f) },
+    Vertex{ glm::vec3(-0.1f, 0.1f, -0.1f) },
+    Vertex{ glm::vec3(0.1f, 0.1f, -0.1f) },
+    Vertex{ glm::vec3(0.1f, 0.1f, 0.1f) }
+};
+
+GLuint lightIndices[] = {
     0, 1, 2,
     0, 2, 3,
-    0, 1, 4,
-    1, 2, 4,
-    2, 3, 4,
-    3, 0, 4
+    0, 4, 7,
+    0, 7, 3,
+    3, 7, 6,
+    3, 6, 2,
+    2, 6, 5,
+    2, 5, 1,
+    1, 5, 4,
+    1, 4, 0,
+    4, 5, 6,
+    4, 6, 7
 };
+
 int main() {
     if (!glfwInit())
         return -1;
@@ -55,66 +85,57 @@ int main() {
 
     glViewport(0, 0, width, height);
 
-    Shader shaderProgram("C:/Users/maria/OneDrive/Desktop/uni/graphics/scene/shaders/default.vert", "C:/Users/maria/OneDrive/Desktop/uni/graphics/scene/shaders/default.frag");
+    Texture textures[]{
+        Texture((relative + "bricks.png").c_str(), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE)
+    };
 
-    VAO VAO1;
-    VAO1.Bind();
-    VBO VBO1(vertices, sizeof(vertices));
-    EBO EBO1(indices, sizeof(indices));
+    Shader shaderProgram((relativeShaders + "default.vert").c_str(), (relativeShaders + "default.frag").c_str());
+    std::vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+    std::vector<GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+    std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
+    Mesh floor(verts, ind, tex);
 
-    VAO1.linkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-    VAO1.linkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    VAO1.linkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    Shader lightShader((relativeShaders + "light.vert").c_str(), (relativeShaders + "light.frag").c_str());
+    std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
+    std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
+    Mesh light(lightVerts, lightInd, tex);
 
-    VAO1.Unbind();
-    VBO1.Unbind();
-    EBO1.Unbind();
+    glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    glm::vec3 lightPos   = glm::vec3(0.5f, 0.5f, 0.5f);
+    glm::mat4 lightModel = glm::mat4(1.0f);
+    lightModel           = glm::translate(lightModel, lightPos);
 
-    Texture bricks((relative + "bricks.png").c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-    bricks.texUnit(shaderProgram, "tex0", 0);
+    glm::vec3 pyramidPos   = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::mat4 pyramidModel = glm::mat4(1.0f);
+    pyramidModel           = glm::translate(pyramidModel, pyramidPos);
 
-    float rotation  = 0.0f;
-    double prevTime = glfwGetTime();
+    lightShader.Activate();
+    glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
+    glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+    shaderProgram.Activate();
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
+    glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+    glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
     glEnable(GL_DEPTH_TEST);
+
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        camera.Inputs(window);
+        camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view  = glm::mat4(1.0f);
-        glm::mat4 proj  = glm::mat4(1.0f);
-        model           = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-        view            = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-        proj            = glm::perspective(glm::radians(45.0f), float(width / height), 0.1f, 100.0f);
-        int modelLoc    = glGetUniformLocation(shaderProgram.ID, "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        int projLoc = glGetUniformLocation(shaderProgram.ID, "proj");
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
-        shaderProgram.Activate();
-
-        double current = glfwGetTime();
-        if (current - prevTime >= 1 / 60) {
-            rotation += 0.01f;
-            prevTime = current;
-        }
-        bricks.Bind();
-        VAO1.Bind();
-
-        glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+        floor.Draw(shaderProgram, camera);
+        light.Draw(lightShader, camera);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    VAO1.Delete();
-    VBO1.Delete();
-    EBO1.Delete();
-    bricks.Delete();
     shaderProgram.Deactivate();
+    lightShader.Deactivate();
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
